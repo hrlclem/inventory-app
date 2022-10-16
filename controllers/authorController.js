@@ -14,8 +14,10 @@ exports.author_list = function (req, res, next) {
       res.render("author_list", {
         title: "Author List",
         author_list: list_authors,
+        // lifespan: list_authors.lifespan,
       });
     });
+
 };
 
 exports.author_detail = (req, res, next) => {
@@ -41,6 +43,7 @@ exports.author_detail = (req, res, next) => {
         title: "Author Detail",
         author: results.author,
         author_books: results.authors_books,
+        lifespan: results.lifespan,
       });
     }
   );
