@@ -1,29 +1,42 @@
 const { body, validationResult } = require("express-validator");
 const BookInstance = require('../models/bookinstance');
-
+const Book = require("../models/book");
+const async = require("async");
 const Genre = require("../models/genre");
 
 
 exports.genre_list = (req, res) => {
-  res.send("NOT IMPLEMENTED: Genre list");
+Genre.find()
+  .sort([["name", "ascending"]])
+  .exec((function(err, list_genre){
+    if (err) {
+      return next(err);
+    }
+    res.render("genre_list", {
+      title:"Genre list",
+      genre_list:list_genre,
+    })
+  })
+  )
 };
 
-exports.genre_detail = function (req, res, next) {
+exports.genre_detail = (req, res, next) => {
   async.parallel(
     {
-      genre: function (callback) {
+      genre(callback) {
         Genre.findById(req.params.id).exec(callback);
       },
-      genre_books: function (callback) {
+
+      genre_books(callback) {
         Book.find({ genre: req.params.id }).exec(callback);
       },
     },
-    function (err, results) {
+    (err, results) => {
       if (err) {
         return next(err);
       }
       if (results.genre == null) {
-        var err = new Error("Genre not found");
+        const err = new Error("Genre not found");
         err.status = 404;
         return next(err);
       }

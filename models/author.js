@@ -23,5 +23,9 @@ AuthorSchema.virtual("name").get(function () {
 AuthorSchema.virtual("url").get(function () {
   return `/catalog/author/${this._id}`;
 });
+AuthorSchema.virtual("lifespan").get(function () {
+  const lifespan = this.date_of_death - this.date_of_birth;
+  return DateTime.fromJSDate(lifespan).toLocaleString(DateTime.DATE_MED);
+});
 
 module.exports = mongoose.model("Author", AuthorSchema);
